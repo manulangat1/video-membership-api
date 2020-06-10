@@ -6,9 +6,9 @@ RUN mkdir -p /opt/services/djangoapp/src
 WORKDIR /opt/services/djangoapp/src
 
 # install our two dependencies
-RUN pip install gunicorn django
+COPY requirements.txt /opt/services/djangoapp/src
+# WORKDIR /opt/app
 RUN pip install -r requirements.txt
-
 # copy our project code
 COPY . /opt/services/djangoapp/src
 
