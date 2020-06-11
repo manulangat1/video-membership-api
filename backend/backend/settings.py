@@ -25,6 +25,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'membership.apps.MembershipConfig',
+    'courses.apps.CoursesConfig'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -63,14 +67,21 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'database1',
-        'USER': 'database1_role',
-        'PASSWORD': 'database1_password',
-        'HOST': 'database1',  # <-- IMPORTANT: same name as docker-compose service!
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'database1',
+#         'USER': 'database1_role',
+#         'PASSWORD': 'database1_password',
+#         'HOST': 'database1',  # <-- IMPORTANT: same name as docker-compose service!
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -110,3 +121,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+from decouple import config
+
+if DEBUG:
+    STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+else:
+    STRIPE_PUBLISHABLE_KEY = ''
+    STRIPE_SECRET_KEY = ''
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+MEDIA_URL= "/media/"
